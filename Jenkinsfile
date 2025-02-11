@@ -41,6 +41,8 @@ pipeline {
                         git clone --branch main https://github.com/amirsha619/argo-todo-app.git argo-todo-app
                         cd argo-todo-app
                         sed -i 's|image:.*|image: '"$DOCKER_IMAGE"':latest|' deploy.yaml
+                        git config user.email "amirs035@gmail.com"
+                        git config user.name "amirsha619"
                         git add deploy.yaml
                         git commit -m "Updated image to latest version"
                         git push origin main
