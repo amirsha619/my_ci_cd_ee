@@ -17,18 +17,19 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:latest .'
+                sh 'docker build -t $DOCKER_IMAGE:$IMAGE_TAG .'
             }
         }
         
         stage('Push Docker Image') {
             steps {
                 withDockerRegistry([credentialsId: 'dockerhub_ad', url: '']) {
-                    sh 'docker push $DOCKER_IMAGE:latest'
+                    sh 'docker push $DOCKER_IMAGE:$IMAGE_TAG'
                 }
             }
         }
 
+        /*
         stage('Update K8s Manifests in GitOps Repo') 
         {
             steps 
@@ -52,6 +53,27 @@ pipeline {
                 }
             }
         }
+        */
+
+        stage('Update K8s Manifests in GitOps Repo') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'githubacc_ad', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
+                        sh '''
+                        rm -rf argo-todo-app
+                        git clone --branch main https://$GIT_USER:$GIT_PASS@github.com/amirsha619/argo-todo-app.git argo-todo-app
+                        cd argo-todo-app
+                        sed -i "s|image:.*|image: $DOCKER_IMAGE:$IMAGE_TAG|" deploy.yaml
+                        git config user.email "amirs035@gmail.com"
+                        git config user.name "amirsha619"
+                        git add deploy.yaml
+                        git commit -m "Updated image to $IMAGE_TAG"
+                        git push https://$GIT_USER:$GIT_PASS@github.com/amirsha619/argo-todo-app.git main
+                        '''
+                    }
+                }
+            }
+        }        
 
         stage('Trigger ArgoCD Sync') 
         {
