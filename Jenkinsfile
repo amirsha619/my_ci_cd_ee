@@ -7,7 +7,9 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                git 'https://github.com/amirsha619/my_ci_cd_ee.git'
+                git branch: 'main', 
+                    credentialsId: 'githubacc_ad',  // Ensure this credential ID exists in Jenkins
+                    url: 'https://github.com/amirsha619/my_ci_cd_ee.git'
             }
         }
 
@@ -26,7 +28,7 @@ pipeline {
             }
         }
         */
-        
+
         /*
         stage('Update K8s Manifests') 
         {
