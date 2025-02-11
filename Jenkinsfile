@@ -29,31 +29,6 @@ pipeline {
             }
         }
 
-        /*
-        stage('Update K8s Manifests in GitOps Repo') 
-        {
-            steps 
-            {
-                script 
-                {
-                    withCredentials([usernamePassword(credentialsId: 'githubacc_ad', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) 
-                    {
-                        sh '''
-                        rm -rf argo-todo-app
-                        git clone --branch main https://github.com/amirsha619/argo-todo-app.git argo-todo-app
-                        cd argo-todo-app
-                        sed -i 's|image:.*|image: '"$DOCKER_IMAGE"':$IMAGE_TAG|' deploy.yaml
-                        git config user.email "amirs035@gmail.com"
-                        git config user.name "amirsha619"
-                        git add deploy.yaml
-                        git commit -m "Updated image to latest version"
-                        git push origin main
-                        '''
-                    }
-                }
-            }
-        }
-        */
 
         stage('Update K8s Manifests in GitOps Repo') {
             steps {
@@ -75,12 +50,24 @@ pipeline {
             }
         }        
 
+        
         stage('Trigger ArgoCD Sync') 
         {
             steps {
-                sh 'argocd app sync todo-app'
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'argocd_admin_password', usernameVariable: 'ARGOCD_USER', passwordVariable: 'ARGOCD_PASS')]) {
+                        withEnv(["ARGOCD_SERVER=localhost:9090"]) 
+                        {
+                            sh '''
+                            argocd login $ARGOCD_SERVER --username $ARGOCD_USER --password $ARGOCD_PASS --insecure
+                            argocd app sync todo-app
+                            '''
+                        }
+                    }
+                }
             }
         }
+
 
     } //end
 }
