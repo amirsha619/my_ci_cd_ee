@@ -19,15 +19,15 @@ pipeline {
             }
         }
 
-        /*
+        
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
+                withDockerRegistry([credentialsId: 'dockerhub_ad', url: '']) {
                     sh 'docker push $DOCKER_IMAGE:latest'
                 }
             }
         }
-        */
+        
 
         /*
         stage('Update K8s Manifests') 
