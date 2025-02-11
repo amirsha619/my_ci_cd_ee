@@ -3,13 +3,14 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'amirsha99/todo-app'
         K8S_NAMESPACE = 'default'
+        GITOPS_REPO = 'https://github.com/amirsha619/argo-todo-app.git'
     }
     stages {
         stage('Clone Repository') {
             steps {
                 git branch: 'main', 
-                    credentialsId: 'githubacc_ad',  // Ensure this credential ID exists in Jenkins
-                    url: 'https://github.com/amirsha619/my_ci_cd_ee.git'
+                credentialsId: 'githubacc_ad',  // Ensure this credential ID exists in Jenkins
+                url: 'https://github.com/amirsha619/my_ci_cd_ee.git'
             }
         }
 
@@ -18,7 +19,6 @@ pipeline {
                 sh 'docker build -t $DOCKER_IMAGE:latest .'
             }
         }
-
         
         stage('Push Docker Image') {
             steps {
@@ -27,18 +27,35 @@ pipeline {
                 }
             }
         }
-        
 
-        /*
-        stage('Update K8s Manifests') 
+        stage('Update K8s Manifests in GitOps Repo') 
         {
-            steps {
-                sh "sed -i 's|image:.*|image: $DOCKER_IMAGE:latest|' deploy.yaml"
-                sh "git add deploy.yaml"
-                sh "git commit -m 'Update image to latest version'"
-                sh "git push origin main"
+            steps 
+            {
+                script 
+                {
+                    withCredentials([usernamePassword(credentialsId: 'githubacc_ad', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) 
+                    {
+                        sh '''
+                        rm -rf argo-todo-app
+                        git clone --branch main https://github.com/amirsha619/argo-todo-app.git argo-todo-app
+                        cd argo-todo-app
+                        sed -i 's|image:.*|image: '"$DOCKER_IMAGE"':latest|' deploy.yaml
+                        git add deploy.yaml
+                        git commit -m "Updated image to latest version"
+                        git push origin main
+                        '''
+                    }
+                }
             }
         }
-        */
-    }
+
+        stage('Trigger ArgoCD Sync') 
+        {
+            steps {
+                sh 'argocd app sync todo-app'
+            }
+        }
+
+    } //end
 }
