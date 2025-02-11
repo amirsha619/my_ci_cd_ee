@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = 'amirsha619/todo-app'
+        DOCKER_IMAGE = 'amirsha99/todo-app'
         K8S_NAMESPACE = 'default'
     }
     stages {
