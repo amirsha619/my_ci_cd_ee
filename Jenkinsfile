@@ -2,6 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = 'amirsha99/todo-app'
+        IMAGE_TAG = "${BUILD_NUMBER}"
         K8S_NAMESPACE = 'default'
         GITOPS_REPO = 'https://github.com/amirsha619/argo-todo-app.git'
     }
@@ -40,7 +41,7 @@ pipeline {
                         rm -rf argo-todo-app
                         git clone --branch main https://github.com/amirsha619/argo-todo-app.git argo-todo-app
                         cd argo-todo-app
-                        sed -i 's|image:.*|image: '"$DOCKER_IMAGE"':latest|' deploy.yaml
+                        sed -i 's|image:.*|image: '"$DOCKER_IMAGE"':$IMAGE_TAG|' deploy.yaml
                         git config user.email "amirs035@gmail.com"
                         git config user.name "amirsha619"
                         git add deploy.yaml
