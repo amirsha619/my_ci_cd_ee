@@ -20,9 +20,12 @@ pipeline {
         }
         stage('Clone Repository') {
             steps {
-                git branch: 'main', 
-                credentialsId: 'githubacc_ad',  // Ensure this credential ID exists in Jenkins
-                url: 'https://github.com/amirsha619/my_ci_cd_ee.git'
+                script{
+                    clone()
+                }
+                //git branch: 'main', 
+                //credentialsId: 'githubacc_ad',  // Ensure this credential ID exists in Jenkins
+                //url: 'https://github.com/amirsha619/my_ci_cd_ee.git'
             }
         }
 
