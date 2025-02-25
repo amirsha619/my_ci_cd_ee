@@ -47,7 +47,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
 
-                scrip{
+                script{
                     dockerpush('dockerhub_ad',DOCKER_IMAGE,IMAGE_TAG)
                 }
                 //withDockerRegistry([credentialsId: 'dockerhub_ad', url: '']) {
