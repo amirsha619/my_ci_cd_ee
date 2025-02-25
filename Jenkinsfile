@@ -18,11 +18,13 @@ pipeline {
             }
 
         }
-        stage('Clone Repository') {
-            steps {
+        stage('Clone Repository') 
+        {
+            steps
+            {
                 script{
                     echo '####### clonning the repo'
-                    clone('https://github.com/amirsha619/my_ci_cd_ee.git','main','githubacc_ad')
+                    clone("https://github.com/amirsha619/my_ci_cd_ee.git","main","githubacc_ad")
                     echo '################## Done clonnig the repo'
                 }
                 //git branch: 'main', 
