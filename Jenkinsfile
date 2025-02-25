@@ -52,7 +52,7 @@ pipeline {
                 }
                 //withDockerRegistry([credentialsId: 'dockerhub_ad', url: '']) {
                     //sh 'docker push $DOCKER_IMAGE:$IMAGE_TAG'
-                }
+                //}
             }
         }
 
