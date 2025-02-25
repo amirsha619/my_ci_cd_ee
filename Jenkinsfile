@@ -22,7 +22,7 @@ pipeline {
             steps {
                 script{
                     echo '####### clonning the repo'
-                    clone()
+                    clone('https://github.com/amirsha619/my_ci_cd_ee.git','main','githubacc_ad')
                     echo '################## Done clonnig the repo'
                 }
                 //git branch: 'main', 
