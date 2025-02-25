@@ -21,7 +21,9 @@ pipeline {
         stage('Clone Repository') {
             steps {
                 script{
+                    echo '####### clonning the repo'
                     clone()
+                    echo '################## Done clonnig the repo'
                 }
                 //git branch: 'main', 
                 //credentialsId: 'githubacc_ad',  // Ensure this credential ID exists in Jenkins
