@@ -35,7 +35,12 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE:$IMAGE_TAG .'
+                script{
+                    echo '##### calling docker build step'
+                    docker_build(DOCKER_IMAGE,IMAGE_TAG)
+                    echo '##### Completed docker build step'
+                }
+                //sh 'docker build -t $DOCKER_IMAGE:$IMAGE_TAG .'
             }
         }
         
