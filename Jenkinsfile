@@ -57,8 +57,7 @@ pipeline {
         }
 
         // Till here i have used  shared libraries to store and group the code for above stpes, 
-        // PLease refer the jenkins_shared_libs repo
-        
+        // PLease refer the jenkins_shared_libs repo..        
 
 
         stage('Update K8s Manifests in GitOps Repo') {
