@@ -1,3 +1,5 @@
+@Library('my_shared_lib') _
+
 pipeline {
     agent any
     environment {
@@ -7,6 +9,15 @@ pipeline {
         GITOPS_REPO = 'https://github.com/amirsha619/argo-todo-app.git'
     }
     stages {
+        satge('Hello')
+        {
+            steps{
+                script{
+                    hello()
+                }
+            }
+
+        }
         stage('Clone Repository') {
             steps {
                 git branch: 'main', 
