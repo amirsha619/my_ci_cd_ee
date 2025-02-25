@@ -9,7 +9,7 @@ pipeline {
         GITOPS_REPO = 'https://github.com/amirsha619/argo-todo-app.git'
     }
     stages {
-        satge('Hello')
+        stage('Hello')
         {
             steps{
                 script{
